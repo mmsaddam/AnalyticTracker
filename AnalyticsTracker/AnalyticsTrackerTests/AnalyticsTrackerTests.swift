@@ -10,20 +10,35 @@ import XCTest
 @testable import AnalyticsTracker
 
 fileprivate enum MocTrackerType: String, CaseIterable {
-    case fb
-    case google
+    case facebook
+    case firebase
 }
 
 fileprivate enum MocEvent: EventConvertible {
     case login
     case logout
+    case custom(AnalyticsParameters)
     
     var name: String {
-        return "MocEvent"
+        switch self {
+        case .login:
+            return "login"
+        case .logout:
+            return "logout"
+        case .custom:
+            return "custom"
+            
+        }
     }
     
     var parameters: AnalyticsParameters {
-        return [:]
+        switch self {
+        case .login, .logout:
+            return [:]
+        case .custom(let parameters):
+            return parameters
+        }
+        
     }
     
     var trackers: [String] {
@@ -31,23 +46,23 @@ fileprivate enum MocEvent: EventConvertible {
     }
 }
 
-fileprivate struct FBMockTracker: AnalyticTracker {
-    var id: String = MocTrackerType.fb.rawValue
+fileprivate struct FaceBookMockTracker: AnalyticTracker {
+    var id: String = MocTrackerType.facebook.rawValue
     var isEnabled: Bool = true
-    var name: String = "FBMockTracker"
+    var name: String = "FaceBookMockTracker"
     var trackInvocationClosure: ((AnalyticsEvent) -> Void)?
     
     func track(_ event: AnalyticsEvent) {
-        print("fire event at \(name) with event: \(event.prarameters ?? [:])")
+        print("Fire event at \(name) with Name: \(event.name), Parameters: \(event.prarameters ?? [:])")
         trackInvocationClosure?(event)
     }
 }
 
 
-fileprivate struct GoogleMockTracker: AnalyticTracker {
-    var id: String = MocTrackerType.google.rawValue
+fileprivate struct FirebaseMocTracker: AnalyticTracker {
+    var id: String = MocTrackerType.firebase.rawValue
     var isEnabled: Bool = true
-    var name: String = "GoogleMockTracker"
+    var name: String = "FirebaseMocTracker"
     var trackInvocationClosure: ((AnalyticsEvent) -> Void)?
     
     func track(_ event: AnalyticsEvent) {
@@ -61,7 +76,7 @@ fileprivate struct GoogleMockTracker: AnalyticTracker {
 final class AnalyticsTrackerTests: XCTestCase {
     
     func testMockTracker() {
-        var tracker = FBMockTracker()
+        var tracker = FaceBookMockTracker()
         let eventParameters = ["userName" : "mmsaddam", "passworkd" : "1234"]
         
         let loginEvent = AnalyticsEvent(name: "login", prarameters: eventParameters)
@@ -78,6 +93,51 @@ final class AnalyticsTrackerTests: XCTestCase {
         
     }
     
+    func testTrackerWithDefaultParameters() {
+        
+        let defaultParameters = [
+            "OS Version" : "1.0.0",
+            "Device ID" : "12345678"
+        ]
+        
+        let defaultParameterCount = defaultParameters.count
+        
+        let configuration = Configuration(qos: .default, extraParameters: defaultParameters)
+        
+        let analytics = AnyAnalytics(configuration)
+        
+        var mocTracker = FaceBookMockTracker()
+        
+        let trackerExpectation = expectation(description: "MocTrackerExpectation")
+        
+        mocTracker.trackInvocationClosure = { trackerEvent in
+            let eventParameterCount = trackerEvent.prarameters?.count ?? 0
+            XCTAssertEqual(defaultParameterCount, eventParameterCount)
+            trackerExpectation.fulfill()
+        }
+        analytics.addTracker(mocTracker, id: MocTrackerType.facebook.rawValue)
+        
+        var anotherTracker = FirebaseMocTracker()
+        
+        let anotherTrackerExpectation = expectation(description: "AnotherTrackerExpectation")
+        
+        anotherTracker.trackInvocationClosure = { trackerEvent in
+            let eventParameterCount = trackerEvent.prarameters?.count ?? 0
+            XCTAssertEqual(defaultParameterCount, eventParameterCount)
+            anotherTrackerExpectation.fulfill()
+        }
+        analytics.addTracker(anotherTracker, id: MocTrackerType.firebase.rawValue)
+        
+        let mocEvent = MocEvent.login
+        
+        analytics.track(mocEvent)
+        
+        wait(for: [trackerExpectation, anotherTrackerExpectation], timeout: 1)
+    }
+    
+    func testAddExtraParametes() {
+        <#function body#>
+    }
     
     
     
