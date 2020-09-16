@@ -14,6 +14,11 @@
 		4AF1AE862511BC8300CF9A77 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4AF1AE852511BC8300CF9A77 /* Assets.xcassets */; };
 		4AF1AE892511BC8300CF9A77 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4AF1AE872511BC8300CF9A77 /* LaunchScreen.storyboard */; };
 		4AF1AE942511BC8400CF9A77 /* AnalyticsTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF1AE932511BC8400CF9A77 /* AnalyticsTrackerTests.swift */; };
+		4AF1AE9F2511BD5A00CF9A77 /* AnalyticsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF1AE9E2511BD5A00CF9A77 /* AnalyticsTracker.swift */; };
+		4AF1AEA12511BDA700CF9A77 /* AnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF1AEA02511BDA700CF9A77 /* AnalyticsEvent.swift */; };
+		4AF1AEA32511BDF700CF9A77 /* EventConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF1AEA22511BDF700CF9A77 /* EventConvertible.swift */; };
+		4AF1AEA52511BE4800CF9A77 /* AnyAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF1AEA42511BE4800CF9A77 /* AnyAnalytics.swift */; };
+		4AF1AEA72511BE6600CF9A77 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF1AEA62511BE6600CF9A77 /* Configuration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +43,11 @@
 		4AF1AE8F2511BC8400CF9A77 /* AnalyticsTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnalyticsTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AF1AE932511BC8400CF9A77 /* AnalyticsTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsTrackerTests.swift; sourceTree = "<group>"; };
 		4AF1AE952511BC8400CF9A77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4AF1AE9E2511BD5A00CF9A77 /* AnalyticsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsTracker.swift; sourceTree = "<group>"; };
+		4AF1AEA02511BDA700CF9A77 /* AnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsEvent.swift; sourceTree = "<group>"; };
+		4AF1AEA22511BDF700CF9A77 /* EventConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventConvertible.swift; sourceTree = "<group>"; };
+		4AF1AEA42511BE4800CF9A77 /* AnyAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyAnalytics.swift; sourceTree = "<group>"; };
+		4AF1AEA62511BE6600CF9A77 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +92,7 @@
 				4AF1AE7C2511BC8200CF9A77 /* AppDelegate.swift */,
 				4AF1AE7E2511BC8200CF9A77 /* SceneDelegate.swift */,
 				4AF1AE802511BC8200CF9A77 /* ViewController.swift */,
+				4AF1AEA82511BE8F00CF9A77 /* Analytics */,
 				4AF1AE822511BC8200CF9A77 /* Main.storyboard */,
 				4AF1AE852511BC8300CF9A77 /* Assets.xcassets */,
 				4AF1AE872511BC8300CF9A77 /* LaunchScreen.storyboard */,
@@ -97,6 +108,18 @@
 				4AF1AE952511BC8400CF9A77 /* Info.plist */,
 			);
 			path = AnalyticsTrackerTests;
+			sourceTree = "<group>";
+		};
+		4AF1AEA82511BE8F00CF9A77 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				4AF1AE9E2511BD5A00CF9A77 /* AnalyticsTracker.swift */,
+				4AF1AEA02511BDA700CF9A77 /* AnalyticsEvent.swift */,
+				4AF1AEA42511BE4800CF9A77 /* AnyAnalytics.swift */,
+				4AF1AEA22511BDF700CF9A77 /* EventConvertible.swift */,
+				4AF1AEA62511BE6600CF9A77 /* Configuration.swift */,
+			);
+			path = Analytics;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,8 +223,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AF1AEA52511BE4800CF9A77 /* AnyAnalytics.swift in Sources */,
 				4AF1AE812511BC8200CF9A77 /* ViewController.swift in Sources */,
+				4AF1AE9F2511BD5A00CF9A77 /* AnalyticsTracker.swift in Sources */,
+				4AF1AEA12511BDA700CF9A77 /* AnalyticsEvent.swift in Sources */,
 				4AF1AE7D2511BC8200CF9A77 /* AppDelegate.swift in Sources */,
+				4AF1AEA32511BDF700CF9A77 /* EventConvertible.swift in Sources */,
+				4AF1AEA72511BE6600CF9A77 /* Configuration.swift in Sources */,
 				4AF1AE7F2511BC8200CF9A77 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
