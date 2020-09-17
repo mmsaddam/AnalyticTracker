@@ -31,8 +31,8 @@ final class AnyAnalytics {
         }
     }
     
-    func addTracker(_ tracker: AnalyticTracker, id: String) {
-        trackers[id] = tracker
+    func addTracker(_ tracker: AnalyticTracker) {
+        trackers[tracker.id] = tracker
     }
     
     func track(_ event: EventConvertible) {

@@ -14,6 +14,7 @@ fileprivate enum MocTrackerType: String, CaseIterable {
     case firebase
 }
 
+
 fileprivate enum MocEvent: EventConvertible {
     case login
     case logout
@@ -74,7 +75,6 @@ fileprivate struct FirebaseMocTracker: AnalyticTracker {
 
 
 final class AnalyticsTrackerTests: XCTestCase {
-    
     func testMockTracker() {
         var tracker = FaceBookMockTracker()
         let eventParameters = ["userName" : "mmsaddam", "passworkd" : "1234"]
@@ -100,8 +100,6 @@ final class AnalyticsTrackerTests: XCTestCase {
             "Device ID" : "12345678"
         ]
         
-        let defaultParameterCount = defaultParameters.count
-        
         let configuration = Configuration(qos: .default, extraParameters: defaultParameters)
         
         let analytics = AnyAnalytics(configuration)
@@ -111,22 +109,22 @@ final class AnalyticsTrackerTests: XCTestCase {
         let trackerExpectation = expectation(description: "MocTrackerExpectation")
         
         mocTracker.trackInvocationClosure = { trackerEvent in
-            let eventParameterCount = trackerEvent.prarameters?.count ?? 0
-            XCTAssertEqual(defaultParameterCount, eventParameterCount)
+            let isEqualEventAndDefault = self.isEqual(lhs: defaultParameters, rhs: trackerEvent.prarameters ?? [:])
+            XCTAssertTrue(isEqualEventAndDefault)
             trackerExpectation.fulfill()
         }
-        analytics.addTracker(mocTracker, id: MocTrackerType.facebook.rawValue)
+        analytics.addTracker(mocTracker)
         
-        var anotherTracker = FirebaseMocTracker()
+        var firebaseMocTracker = FirebaseMocTracker()
         
         let anotherTrackerExpectation = expectation(description: "AnotherTrackerExpectation")
         
-        anotherTracker.trackInvocationClosure = { trackerEvent in
-            let eventParameterCount = trackerEvent.prarameters?.count ?? 0
-            XCTAssertEqual(defaultParameterCount, eventParameterCount)
+        firebaseMocTracker.trackInvocationClosure = { trackerEvent in
+            let isEqualEventAndDefault = self.isEqual(lhs: defaultParameters, rhs: trackerEvent.prarameters ?? [:])
+            XCTAssertTrue(isEqualEventAndDefault)
             anotherTrackerExpectation.fulfill()
         }
-        analytics.addTracker(anotherTracker, id: MocTrackerType.firebase.rawValue)
+        analytics.addTracker(firebaseMocTracker)
         
         let mocEvent = MocEvent.login
         
@@ -136,10 +134,59 @@ final class AnalyticsTrackerTests: XCTestCase {
     }
     
     func testAddExtraParametes() {
-        <#function body#>
+        let defaultParameters = [
+            "OS Version" : "1.0.0",
+            "Device ID" : "12345678"
+        ]
+        
+        let configuration = Configuration(qos: .default, extraParameters: defaultParameters)
+        
+        let analytics = AnyAnalytics(configuration)
+        
+        let extraParamaters = [
+            "Device Token": "43480fnsdlflsd",
+            "data": "434930flsdfjsldf"
+        ]
+        
+        analytics.addParameters(extraParamaters)
+        
+        var firebaseMocTracker = FirebaseMocTracker()
+        
+        let mocExpectation = expectation(description: "mocExpectation")
+        
+        let mergedParametes = merge(parameters: defaultParameters, withExtraParameters: extraParamaters)
+        
+        firebaseMocTracker.trackInvocationClosure = { [mergedParametes] trackerEvent in
+            XCTAssertTrue(self.isEqual(lhs: trackerEvent.prarameters ?? [:], rhs: mergedParametes ?? [:]))
+            mocExpectation.fulfill()
+        }
+        
+        analytics.addTracker(firebaseMocTracker)
+        
+        let mocEvent = MocEvent.login
+        analytics.track(mocEvent)
+        
+        wait(for: [mocExpectation], timeout: 2)
     }
     
+    func testCustomEvent() {
+        let customParameters = ["username" : "saddam", "password" : "1234"]
+        
+        let analytics = AnyAnalytics()
+        var firebaseMockTracker = FirebaseMocTracker()
+         let mocExpectation = expectation(description: "mocExpectation")
+        firebaseMockTracker.trackInvocationClosure = { trackerEvent in
+            XCTAssertTrue(self.isEqual(lhs: customParameters, rhs: trackerEvent.prarameters ?? [:]), "custom prameter is nit equal to event parameeter")
+                mocExpectation.fulfill()
+        }
+        analytics.addTracker(firebaseMockTracker)
+        
+        let customEvent = MocEvent.custom(customParameters)
     
+        analytics.track(customEvent)
+        
+        wait(for: [mocExpectation], timeout: 2)
+    }
     
 }
 
@@ -149,6 +196,18 @@ extension AnalyticsTrackerTests {
     }
     
     private func isEqual(lhs: AnalyticsParameters, rhs: AnalyticsParameters) -> Bool {
-        return lhs as AnyObject === rhs as AnyObject
+        return lhs.count == rhs.count
+    }
+    private func merge(parameters: AnalyticsParameters?,
+                       withExtraParameters extra: AnalyticsParameters?) -> AnalyticsParameters? {
+        
+        switch (parameters, extra) {
+        case (var parameters?, let extra?):
+            parameters.merge(extra, uniquingKeysWith: { _, new in new })
+            return parameters
+        default:
+            return parameters ?? extra
+        }
     }
 }
+
