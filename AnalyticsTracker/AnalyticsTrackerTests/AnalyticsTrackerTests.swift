@@ -14,6 +14,12 @@ fileprivate enum MocTrackerType: String, CaseIterable {
     case firebase
 }
 
+extension MocTrackerType: TrackerID {
+    var id: String {
+        return rawValue
+    }
+}
+
 
 fileprivate enum MocEvent: EventConvertible {
     case login
@@ -42,13 +48,13 @@ fileprivate enum MocEvent: EventConvertible {
         
     }
     
-    var trackers: [String] {
-        return MocTrackerType.allCases.compactMap { $0.rawValue }
+    var trackers: [TrackerID] {
+        return MocTrackerType.allCases
     }
 }
 
 fileprivate struct FaceBookMockTracker: AnalyticTracker {
-    var id: String = MocTrackerType.facebook.rawValue
+    var identifier: TrackerID = MocTrackerType.facebook
     var isEnabled: Bool = true
     var name: String = "FaceBookMockTracker"
     var trackInvocationClosure: ((AnalyticsEvent) -> Void)?
@@ -61,7 +67,7 @@ fileprivate struct FaceBookMockTracker: AnalyticTracker {
 
 
 fileprivate struct FirebaseMocTracker: AnalyticTracker {
-    var id: String = MocTrackerType.firebase.rawValue
+    var identifier: TrackerID = MocTrackerType.firebase
     var isEnabled: Bool = true
     var name: String = "FirebaseMocTracker"
     var trackInvocationClosure: ((AnalyticsEvent) -> Void)?

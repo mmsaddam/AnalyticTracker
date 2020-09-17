@@ -11,7 +11,7 @@ import Foundation
 typealias AnalyticsParameters = [String : Any]
 
 protocol AnalyticTracker {
-    var id: String { get set }
+    var identifier: TrackerID { get set }
     var isEnabled: Bool { get set }
     var name: String { get set }
     func track(_ event: AnalyticsEvent)

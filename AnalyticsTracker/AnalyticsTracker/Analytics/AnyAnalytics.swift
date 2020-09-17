@@ -32,7 +32,7 @@ final class AnyAnalytics {
     }
     
     func addTracker(_ tracker: AnalyticTracker) {
-        trackers[tracker.id] = tracker
+        trackers[tracker.identifier.id] = tracker
     }
     
     func track(_ event: EventConvertible) {
@@ -53,7 +53,7 @@ final class AnyAnalytics {
     }
     
     private func shouldldFireEvent(_ event: EventConvertible, toTracker tracker: AnalyticTracker) -> Bool {
-        event.trackers.contains(tracker.id)
+        event.trackers.map { $0.id }.contains(tracker.identifier.id)
     }
     
     private func getAnalyticEvent(from name: String, parameters: AnalyticsParameters?) -> AnalyticsEvent {

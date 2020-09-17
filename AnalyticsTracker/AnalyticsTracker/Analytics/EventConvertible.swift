@@ -8,8 +8,12 @@
 
 import Foundation
 
+protocol TrackerID {
+    var id: String { get }
+}
+
 protocol EventConvertible {
     var name: String { get }
     var parameters: AnalyticsParameters { get }
-    var trackers: [String] { get }
+    var trackers: [TrackerID] { get }
 }
