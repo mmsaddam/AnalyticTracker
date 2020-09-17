@@ -16,6 +16,8 @@ final class AnyAnalytics {
     
     private let queue: DispatchQueue
     
+    static let shared: AnyAnalytics = AnyAnalytics()
+    
     init(_ configuration: Configuration = Configuration()) {
         queue = DispatchQueue(label: "com.muzahid.text", qos: configuration.qos, attributes: .concurrent)
         defaultParameters = configuration.extraParameters ?? [:]
@@ -32,7 +34,7 @@ final class AnyAnalytics {
     }
     
     func addTracker(_ tracker: AnalyticTracker) {
-        trackers[tracker.identifier.id] = tracker
+        trackers[tracker.id.value] = tracker
     }
     
     func track(_ event: EventConvertible) {
@@ -53,7 +55,7 @@ final class AnyAnalytics {
     }
     
     private func shouldldFireEvent(_ event: EventConvertible, toTracker tracker: AnalyticTracker) -> Bool {
-        event.trackers.map { $0.id }.contains(tracker.identifier.id)
+        event.trackers.map { $0.value }.contains(tracker.id.value)
     }
     
     private func getAnalyticEvent(from name: String, parameters: AnalyticsParameters?) -> AnalyticsEvent {
